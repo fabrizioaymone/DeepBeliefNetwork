@@ -25,10 +25,13 @@ public:    // Weight matrices
     MatrixXd toppen;
     MatrixXd toplab;
 
-    const int BOLTZEPOCHS = 100;
+    const int BOLTZEPOCHS = 50;
+    const int BATCHSIZE = 10;
 
     static double sigmoid(const double);
+    static RowVectorXd softmax(RowVectorXd);
     void trainboltz(MatrixXd &, std::vector<RowVectorXd>);
+    void trainmemboltz(MatrixXd &, MatrixXd &, std::vector<RowVectorXd>,  std::vector<RowVectorXd>);
 
     dbn();
     void fit(dataset *);

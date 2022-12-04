@@ -131,6 +131,7 @@ void dataset::read_test_labels(std::string path) {
 }
 void dataset::split_data(){
     std::unordered_set<int> used_indexes;
+    std::unordered_set<int> used_labels;
     int train_size = train_val_features->size() * TRAIN_SET_PERCENT;
     int validation_size = train_val_features->size() * VALIDATION_PERCENT;
 
@@ -139,10 +140,13 @@ void dataset::split_data(){
     int count = 0;
     while(count < train_size){
         int rand_index = rand() % (train_val_features->size());
-        if(used_indexes.find(rand_index) == used_indexes.end()){
+        if(used_indexes.find(rand_index) == used_indexes.end() && used_labels.find(train_val_labels->at(rand_index)) == used_labels.end()){
             train_features->push_back(train_val_features->at(rand_index));
             train_labels->push_back(train_val_labels->at(rand_index));
             used_indexes.insert(rand_index);
+            used_labels.insert(train_val_labels->at(rand_index));
+            if(used_labels.size()>=10)
+                used_labels.erase(used_labels.begin(), used_labels.end());
             count++;
         }
     }
@@ -160,8 +164,10 @@ void dataset::split_data(){
 
     printf("Training Data Size: %lu.\n", train_features->size());
     printf("Validation Data Size: %lu.\n", valid_features->size());
-
 }
+
+
+
 
 uint32_t dataset::convert_to_little_endian(const unsigned char* bytes){
 
